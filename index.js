@@ -40,6 +40,7 @@ client.on('message', message => {
 	}
 
 	try {
+		console.log(`${message.author.tag}: ${commandName} ${args}`);
 		command.execute(message, args);
 	} catch (error) {
 		console.error(error);
