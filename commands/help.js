@@ -22,6 +22,25 @@ module.exports = {
 				);
 
 			message.channel.send({ embed: embed});
+		} else {
+			const name = args[0];
+			const command = commands.get(name)
+				|| commands.find(c => c.aliases && c.aliases.includes(name));
+
+			const aliases = command.aliases ? command.aliases.join(', ') : 'None';
+			const usage = command.usage
+				? `${prefix}${command.name} ${command.usage}`
+				: `${prefix}${command.name}`;
+
+			const embed = new MessageEmbed()
+				.setTitle(`${args} command`)
+				.addFields(
+					{ name: 'Description', value: command.description, inline: false},
+					{ name: 'Aliases', value: aliases, inline: false},
+					{ name: 'Usage', value: usage, inline: false}
+				);
+
+			message.channel.send({ embed: embed});
 		}
 	},
 }
