@@ -1,0 +1,26 @@
+{
+  "name": "thlw-scraper",
+  "version": "1.0.0",
+  "description": "A Discord Bot for scraping Touhou LostWord related data",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sglkc/thlw-scraper.git"
+  },
+  "author": "sglkc",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sglkc/thlw-scraper/issues"
+  },
+  "homepage": "https://github.com/sglkc/thlw-scraper#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.10",
+    "discord.js": "^12.5.3",
+    "dotenv": "^10.0.0",
+    "fuse.js": "^6.4.6",
+    "request-promise": "^4.2.6"
+  }
+}
