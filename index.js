@@ -17,7 +17,8 @@ for (const file of commandFiles) {
 
 client.once('ready', () => {
 	if (owner === '') {
-		return console.error('Please set owner id in config.json!');
+		console.error('Please set owner id in config.json!')
+		return client.destroy();
 	}
 
 	console.log(`THLW Bot running`);
