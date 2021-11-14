@@ -1,7 +1,7 @@
 const fs = require('fs');
 const dotenv = require('dotenv').config();
 const Discord = require('discord.js');
-const { prefix } = require('./config.json');
+const { prefix, owner } = require('./config.json');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
@@ -16,7 +16,10 @@ for (const file of commandFiles) {
 }
 
 client.once('ready', () => {
-	client.user.setPresence({status: 'invisible'});
+	if (owner === '') {
+		return console.error('Please set owner id in config.json!');
+	}
+
 	console.log(`THLW Bot running`);
 });
 
@@ -36,6 +39,12 @@ client.on('message', message => {
 	if (command.args && !args.length) {
 		return message.channel.send(
 			`No arguments provided. Confused? \`${prefix}help ${commandName}\``
+		);
+	}
+
+	if (command.owner && message.author.id !== owner) {
+		return message.channel.send(
+			`Not enough permission <:suswacko:856558674478104628>`
 		);
 	}
 

@@ -3,6 +3,7 @@ const fs = require('fs');
 module.exports = {
 	name: 'reload',
 	description: 'Reloads a command',
+	owner: true,
 	args: true,
 	usage: '<command>',
 	execute(message, args) {

@@ -1,5 +1,5 @@
 const { MessageEmbed } = require('discord.js');
-const { prefix } = require('../config.json');
+const { prefix, owner } = require('../config.json');
 
 module.exports = {
 	name: 'help',
@@ -8,17 +8,28 @@ module.exports = {
 		const { commands } = message.client;
 
 		if (!args.length) {
-			const data = [];
+			const ownerUser = message.client.users.cache.get(owner);
+			const everyone = [];
+			const ownerOnly = [];
 
 			commands.map((command) => {
-				data.push(`**${command.name}**: ${command.description}`);
+				const text = `**${command.name}**: ${command.description}`;
+
+				if (command.owner) {
+					ownerOnly.push(text);
+				} else {
+					everyone.push(text);
+				}
 			});
 
 			const embed = new MessageEmbed()
 				.setTitle('Bot Help')
-				.setDescription(`Current prefix: ${prefix}`)
+				.setDescription(
+					`Bot owner: ${ownerUser.tag}\nCurrent prefix: ${prefix}`
+				)
 				.addFields(
-					{ name: 'Commands', value: data.join('\n'), inline: false}
+					{ name: 'Bot Owner', value: ownerOnly.join('\n'), inline: false },
+					{ name: 'Commands', value: everyone.join('\n'), inline: false }
 				);
 
 			message.channel.send({ embed: embed});
@@ -26,6 +37,10 @@ module.exports = {
 			const name = args[0];
 			const command = commands.get(name)
 				|| commands.find(c => c.aliases && c.aliases.includes(name));
+
+			const description = command.owner
+				? command.description + '\n(Bot Owner only)'
+				: command.description;
 
 			const aliases = command.aliases ? command.aliases.join(', ') : 'None';
 			const usage = command.usage
@@ -35,7 +50,7 @@ module.exports = {
 			const embed = new MessageEmbed()
 				.setTitle(`${args} command`)
 				.addFields(
-					{ name: 'Description', value: command.description, inline: false},
+					{ name: 'Description', value: description, inline: false},
 					{ name: 'Aliases', value: aliases, inline: false},
 					{ name: 'Usage', value: usage, inline: false}
 				);
