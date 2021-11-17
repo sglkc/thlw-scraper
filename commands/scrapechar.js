@@ -5,7 +5,6 @@ const cheerio = require('cheerio');
 module.exports = {
   name: 'scrapechar',
   description: 'Scrapes character tier list from GamePress.\n' +
-  'No arguments to continue last scraping in case of errors\n' +
   'Insert character name after for a specific character',
   usage: '[character name]',
   async execute(message, args) {
