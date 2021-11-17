@@ -34,19 +34,38 @@ module.exports = {
       const info = ch.info === '' ? 'Empty' : ch.info;
       const type = ch.type === '' ? 'General' : ch.type;
 
-      // If extra data not found
-      if (!ch.extras) {
-        Embed.setTitle(name)
-          .setURL(url)
-          .setDescription(
-            `**Tier:** ${tier.overall}\n` +
-            `**Farm:** ${tier.farm}\n` +
+      Embed.setTitle(name)
+        .setURL(url)
+        .setDescription(
+          `**Tier:** ${tier.overall} | ` +
+          `**Farm:** ${tier.farm} | ` +
+          `**CQ:** ${tier.tower}\n` +
+          `**Type:** ${type}`
+        )
+        .setThumbnail(img)
+        .addField('Description', info, false)
+        .setFooter('No additional info available');
+
+      // If extra data available
+      if (ch.extras) {
+        const title = ch.title;
+        const role = ch.role;
+        const bigimg = ch.bigimg;
+        const resist = ch.resist.join(', ');
+        const weak = ch.weak.join(', ');
+
+        Embed.setDescription(
+            `***${title}***\n` +
+            `**Tier:** ${tier.overall} | ` +
+            `**Farm:** ${tier.farm} | ` +
             `**CQ:** ${tier.tower}\n` +
+            `**Role:** ${role}\n` +
             `**Type:** ${type}`
           )
-          .setThumbnail(img)
-          .addField('Description', info, false)
-          .setFooter('No additional info available');
+          .addField('Resistances', resist, true)
+          .addField('Weaknesses', weak, true)
+          .setImage(bigimg)
+          .setFooter('Taken from GamePress');
       }
 
       message.channel.send({ embed: Embed });
