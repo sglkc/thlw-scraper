@@ -14,6 +14,7 @@ module.exports = {
     const status = await message.channel.send(
       `Scraping ${args.join(' ') || 'every characters'} from tier list...`
     );
+    var found = false;
 
     await rp(url)
       .then((html) => {
@@ -58,8 +59,14 @@ module.exports = {
               'info': info,
               'extras': false
             }
+
+            found = true;
           });
         });
+
+        if (!found && specificChar) {
+          return status.edit(`Character ${args.join(' ')} not found`);
+        }
 
         const indexes = JSON.stringify(characters, null, 4);
         fs.writeFileSync('./data/characters.json', indexes, 'utf8');
