@@ -8,6 +8,7 @@ module.exports = {
   'Scraping defaults to characters who doesn\'t have extras\n' +
   'Use `force` to force update every characters\n' +
   'Insert character name for a specific character',
+  owner: true,
   usage: '[force] [character name]',
   async execute(message, args) {
     const characters = require('../data/characters.json');
