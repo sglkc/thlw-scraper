@@ -17,6 +17,10 @@ module.exports = {
     const keys = specificChar || Object.keys(characters);
     const length = keys.length;
 
+    if (!length) {
+      return message.channel.send('Characters data empty, try to scrape?');
+    }
+
     if (specificChar && !(specificChar[0] in characters)) {
       return message.channel.send(
         `Can't find ${args.join(' ')} in characters data`
@@ -197,7 +201,10 @@ module.exports = {
         });
     }
 
-    status.edit(`Success scraping ${args.slice(1).join(' ') || 'characters'}`);
+    status.edit(
+      `Success scraping ${args.slice(1).join(' ') || `${length} characters`}`
+    );
+
     const json = JSON.stringify(characters, null, 4);
     fs.writeFileSync('./data/characters.json', json, 'utf8');
   }
