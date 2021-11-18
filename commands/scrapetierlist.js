@@ -3,9 +3,10 @@ const rp = require('request-promise');
 const cheerio = require('cheerio');
 
 module.exports = {
-  name: 'scrapechar',
+  name: 'scrapetierlist',
   description: 'Scrapes character tier list from GamePress.\n' +
   'Insert character name for a specific character',
+  aliases: ['scrapetl'],
   owner: true,
   usage: '[character name]',
   async execute(message, args) {
@@ -22,7 +23,7 @@ module.exports = {
         const $ = cheerio.load(html);
 
         $('.touhou-tier-table').each((i, tierTable) => {
-          let tier = $('.tier-label', tierTable).text();
+          const tier = $('.tier-label', tierTable).text();
 
           $('.touhou-tier-list-row', tierTable).each((j, char) => {
             const name = $('.title-span', char).text();

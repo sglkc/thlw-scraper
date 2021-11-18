@@ -3,11 +3,12 @@ const rp = require('request-promise');
 const cheerio = require('cheerio');
 
 module.exports = {
-  name: 'scrapeall',
+  name: 'scrapecharacter',
   description: 'Scrapes character(s) from GamePress wiki.\n' +
   'Scraping defaults to characters who doesn\'t have extras\n' +
   'Use `force` to force update every characters\n' +
   'Insert character name for a specific character',
+  aliases: ['scrapechar'],
   owner: true,
   usage: '[force] [character name]',
   async execute(message, args) {
