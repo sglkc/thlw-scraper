@@ -4,8 +4,9 @@ const fs = require('fs');
 const characters = require('../data/characters.json');
 
 module.exports = {
-  name: 'search',
+  name: 'searchchar',
   description: 'Search for character data',
+  aliases: ['char'],
   args: true,
   usage: '<character name>',
   execute(message, args) {
