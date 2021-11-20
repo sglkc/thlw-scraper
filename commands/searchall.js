@@ -14,11 +14,13 @@ module.exports = {
   args: true,
   usage: '<query>',
   execute(message, args) {
+    const { searchThreshold } = require('../config.json');
+    const search = args.join(' ');
 
     // Prioritize first element to search
     // Command must not be an alias
     const data = {
-      files: ['aliases', 'characters', 'storycards'],
+      names: ['Aliases', 'Characters', 'Story Cards'],
       commands: ['alias', 'searchchar', 'searchstorycard']
     };
     const results = {};
@@ -29,10 +31,11 @@ module.exports = {
     };
 
     // Fuzzy search for matches
-    data.files.forEach((file, i) => {
+    data.names.forEach((name, i) => {
+      const file = name.toLowerCase().replace(/ /g, '');
       const json = require(`../data/${file}.json`);
-      const fuse = new Fuse(Object.keys(json), options);
-      const result = fuse.search(args.join(''), { limit: 5 });
+      const fuse = new Fuse(Object.values(json), options);
+      const result = fuse.search(search, { limit: 5 });
 
       // Store results with lowest score as key to compare later
       // Also command to trigger
@@ -49,15 +52,36 @@ module.exports = {
     const closest = Math.min(...resultsKey);
 
     if (results[closest]) {
-      const commandName = results[closest].command;
-      const arg = results[closest][0].item;
-      const command = message.client.commands.get(commandName);
+      if (closest < searchThreshold) {
+        const commandName = results[closest].command;
+        const arg = results[closest][0].item.name;
+        const command = message.client.commands.get(commandName);
 
-      try {
-        command.execute(message, [ arg ]);
-      } catch (error) {
-        console.error(error);
-        message.reply('An error has occured');
+        try {
+          command.execute(message, [ arg ]);
+        } catch (error) {
+          console.error(error);
+          message.reply('An error has occured');
+        }
+      } else {
+        const Embed = new MessageEmbed()
+          .setTitle('Not found!')
+          .setDescription(`Looking for **${search}**`);
+
+        resultsKey.forEach((key, i) => {
+
+          if (key === '10') return;
+          let content = '';
+
+          // Concatenate matches name
+          results[key].forEach((match) => {
+            content = content + `${match.item.name}\n`;
+          });
+
+          Embed.addField(data.names[i], content, true);
+        });
+
+        message.channel.send({ embed: Embed });
       }
     } else {
       message.channel.send('No matches found');
