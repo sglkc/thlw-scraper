@@ -35,7 +35,13 @@ client.on('message', message => {
       cmd => cmd.aliases && cmd.aliases.includes(commandName)
     );
 
-  if (!command) return;
+  // Fallback to searchall if no command found
+  if (!command) {
+    let args = message.content.slice(prefix.length).trim().split(/ +/);
+    let command = client.commands.get('searchall');
+
+    return command.execute(message, args);
+  }
 
   if (command.args && !args.length) {
     return message.channel.send(
