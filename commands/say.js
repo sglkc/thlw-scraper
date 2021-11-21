@@ -11,11 +11,11 @@ module.exports = {
       message.client.channels.fetch(chid)
         .then((channel) => {
           channel.send(msg);
-          message.delete();
         })
         .catch(console.error);
     } else {
       message.channel.send(args.join(' '));
     }
+    message.delete();
   },
 };
