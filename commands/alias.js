@@ -5,6 +5,8 @@ module.exports = {
   name: 'alias',
   description: 'Trigger an alias.',
   aliases: ['a'],
+  args: true,
+  usage: '<alias>',
   execute(message, args) {
     const aliases = require('../data/aliases.json');
     const alias = args.join('').trim();
@@ -22,14 +24,17 @@ module.exports = {
     const result = fuse.search(alias, { limit: 3 });
 
     if (result.length) {
-      const commandArgs = result[0].item.command;
-      const commandName = commandArgs.shift().toLowerCase();
+      const resultCommand = result[0].item.command;
+      const commandArgs = resultCommand.slice(1);
+      const commandName = resultCommand.slice(0, 1).toString().toLowerCase();
       const command = message.client.commands.get(commandName)
         || message.client.commands.find(
           cmd => cmd.aliases && cmd.aliases.includes(commandName)
         );
 
-      if (!command) return message.channel.send('Command not found');
+      if (!command) {
+        return message.channel.send(`Command \`${commandName}\` not found`);
+      }
 
       if (command.args && !commandArgs.length) {
         return message.channel.send('Command argument(s) missing');
