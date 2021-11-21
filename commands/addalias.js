@@ -11,8 +11,8 @@ module.exports = {
     const [alias, ...command] = args.join(' ').match(
       /\w+|«[^«]+»|“[^“]+”|"[^"]+"|'[^']+'/g
     );
-    const sanitized = alias.replace(/[^0-9A-Z ]+/gi, '').trim();
-    const shortened = sanitized.replace(/ /g, '').toLowerCase();
+    const sanitized = alias.replace(/[«»“”'"]+/g, '').trim();
+    const shortened = sanitized.replace(/[^A-Z0-9]/gi, '').toLowerCase();
 
     if (!command.length) {
       return message.channel.send('No command specified');

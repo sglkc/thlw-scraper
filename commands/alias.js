@@ -7,7 +7,7 @@ module.exports = {
   aliases: ['a'],
   execute(message, args) {
     const aliases = require('../data/aliases.json');
-    const alias = args.join('');
+    const alias = args.join('').trim();
 
     if (!Object.keys(aliases).length) {
       return message.channel.send('Aliases is empty');

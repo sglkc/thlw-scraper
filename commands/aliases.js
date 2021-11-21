@@ -7,14 +7,16 @@ module.exports = {
   execute(message, args) {
     const aliases = require('../data/aliases.json');
     const Embed = new MessageEmbed();
+    const values = Object.values(aliases);
     var content = '';
 
-    if (!Object.keys(aliases).length) {
+    if (!values.length) {
       content = 'Aliases empty';
     } else {
-      for (let alias in aliases) {
-        content += `**${aliases[alias].name}:** ${aliases[alias].command}\n`;
-      }
+      values.forEach((alias) => {
+        content += `**${alias.name}:** ` +
+        `${alias.command.join(' ')}\n`;
+      });
     }
 
     Embed.setTitle('Aliases')

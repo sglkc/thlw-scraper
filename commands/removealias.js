@@ -10,7 +10,7 @@ module.exports = {
   execute(message, args) {
     const aliases = require('../data/aliases.json');
     const alias = args.join('');
-    const shortened = alias.toLowerCase().replace(/[^0-9A-Z]+/gi, '');
+    const shortened = alias.toLowerCase().replace(/ /g, '').trim();
     const aliasName = aliases[shortened].name;
 
     delete aliases[shortened];
