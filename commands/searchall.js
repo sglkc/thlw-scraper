@@ -13,7 +13,7 @@ module.exports = {
   aliases: ['all'],
   args: true,
   usage: '<query>',
-  execute(message, args) {
+  async execute(message, args) {
     const { searchThreshold } = require('../config.json');
     const search = args.join(' ');
 
@@ -47,8 +47,8 @@ module.exports = {
       }
     });
 
-    // Look for closest match by comparing keys
-    const resultsKey = Object.keys(results);
+    // Look for closest match by comparing keys and omit empty results
+    const resultsKey = Object.keys(results).filter(key => key !== '10');
     const closest = Math.min(...resultsKey);
 
     if (results[closest]) {
@@ -66,11 +66,10 @@ module.exports = {
       } else {
         const Embed = new MessageEmbed()
           .setTitle('Not found!')
-          .setDescription(`Looking for **${search}**`);
+          .setDescription(`Looking for **${search}**`)
+          .setFooter('Use reactions to get first the result of each group');
 
         resultsKey.forEach((key, i) => {
-
-          if (key === '10') return;
           let content = '';
 
           // Concatenate matches name
@@ -81,7 +80,43 @@ module.exports = {
           Embed.addField(data.names[i], content, true);
         });
 
-        message.channel.send({ embed: Embed });
+        const sentEmbed = await message.channel.send({ embed: Embed });
+
+        // Reactions for instant result
+        const emojis = ['1️⃣', '2️⃣', '3️⃣'];
+
+        // Update
+        emojis.length = resultsKey.filter(key => key !== 10).length;
+
+        for (const emoji of emojis) await sentEmbed.react(emoji);
+
+        const reactions = sentEmbed.createReactionCollector(
+          (reaction, user) => emojis.includes(reaction.emoji.name),
+          { time: 15000 }
+        );
+
+        reactions.on('collect', (reaction) => {
+          sentEmbed.reactions.removeAll();
+
+          const index = emojis.indexOf(reaction.emoji.name);
+          const commandName = results[resultsKey[index]].command;
+          const arg = results[resultsKey[index]][0].item.name;
+          const command = message.client.commands.get(commandName);
+
+          try {
+            command.execute(message, [ arg ]);
+            sentEmbed.delete();
+          } catch (error) {
+            console.error(error);
+            message.reply('An error has occured');
+          }
+        });
+
+        reactions.on('end', () => {
+          if (!sentEmbed.deleted) {
+            sentEmbed.reactions.removeAll();
+          }
+        });
       }
     } else {
       message.channel.send('No matches found');
