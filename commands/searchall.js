@@ -1,11 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const Fuse = require('fuse.js');
 const fs = require('fs');
-/*
-const characters = require('../data/characters.json');
-const storycards = require('../data/storycards.json');
-const aliases = require('../data/aliases.json');
-*/
 
 module.exports = {
   name: 'searchall',
