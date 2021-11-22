@@ -1,12 +1,11 @@
 const { MessageEmbed } = require('discord.js');
 const Fuse = require('fuse.js');
 const fs = require('fs');
-const characters = require('../data/characters.json');
 
 module.exports = {
   name: 'tierlist',
   description: 'Tier list for data available.\n' +
-  'Categories: `characters`, `storycards`',
+  'Categories: `characters`/`ch`, `storycards`/`sc`',
   aliases: ['tl'],
   args: true,
   usage: '<category>',
@@ -17,6 +16,7 @@ module.exports = {
 
     switch(category) {
       case 'characters':
+      case 'ch':
         {
           const characters = require('../data/characters.json');
           const values = Object.values(characters);
@@ -37,6 +37,7 @@ module.exports = {
         }
         break;
       case 'storycards':
+      case 'sc':
         {
           const storycards = require('../data/storycards.json');
           const values = Object.values(storycards);
@@ -59,7 +60,7 @@ module.exports = {
       default:
         return message.channel.send(
           'Not a valid category!\n' +
-          'Categories: `characters`, `storycards`'
+          'Categories: `characters`/`ch`, `storycards`/`sc`'
         );
         break;
     }
@@ -67,7 +68,7 @@ module.exports = {
     const tierKeys = Object.keys(tierlist);
     const Embed = new MessageEmbed()
       .setTitle(`${title} Tier List`)
-      .setURL(url);
+      .setURL(url)
       .setFooter('Taken from GamePress | Click title to open link');
 
     tierKeys.forEach((tier) => {
