@@ -41,6 +41,7 @@ module.exports = {
       // Also command to trigger
       if (result.length) {
         results[result[0].score] = result;
+        results[result[0].score].name = data.names[i];
         results[result[0].score].command = data.commands[i];
       } else {
         results[10] = false;
@@ -69,15 +70,19 @@ module.exports = {
           .setDescription(`Looking for **${search}**`)
           .setFooter('Use reactions to get first the result of each group');
 
-        resultsKey.forEach((key, i) => {
-          let content = '';
+        resultsKey.forEach((key) => {
+          let content;
 
           // Concatenate matches name
-          results[key].forEach((match) => {
-            content = content + `${match.item.name}\n`;
+          results[key].forEach((match, i) => {
+            if (i === 0) {
+              content = `**${match.item.name}**\n`;
+            } else {
+              content = content + `${match.item.name}\n`;
+            }
           });
 
-          Embed.addField(data.names[i], content, true);
+          Embed.addField(results[key].name, content, true);
         });
 
         const sentEmbed = await message.channel.send({ embed: Embed });
