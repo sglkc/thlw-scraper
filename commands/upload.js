@@ -1,27 +1,28 @@
 const fs = require('fs');
-const request = require('request');
+const rp = require('request-promise');
 
 module.exports = {
   name: 'upload',
   description: 'Upload files to store in data folder.',
   owner: true,
-  execute(message, args) {
+  async execute(message, args) {
     if (!message.attachments.first()) {
       return message.channel.send('Please attach file(s)');
     }
 
-    message.attachments.each((attachment) => {
+    message.attachments.each(async (attachment) => {
       const name = attachment.name;
       const url = attachment.url;
 
-      request.get(url)
-        .on('error', (error) => {
-          message.channel.send(`Failed downloading ${name}`);
-          console.error(error);
+      await rp(url)
+        .then((file) => {
+          fs.writeFileSync(`./data/${name}`, file, 'utf8');
+          message.channel.send(`Downloaded file ${name}`);
         })
-        .pipe(fs.createWriteStream(`./data/${name}`));
+        .catch((err) => {
+          message.channel.send(`Failed downloading file ${name}`);
+          console.error(err);
+        });
     });
-
-    message.channel.send('Upload process finished');
   }
 }
