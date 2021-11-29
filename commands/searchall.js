@@ -118,8 +118,6 @@ module.exports = {
           }
         });
       }
-    } else {
-      message.channel.send('No matches found');
     }
   }
 }
