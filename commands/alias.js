@@ -45,6 +45,7 @@ module.exports = {
       }
 
       try {
+        message.author = message.client.user;
         command.execute(message, commandArgs);
       } catch (error) {
         console.error(error);

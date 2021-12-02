@@ -13,9 +13,12 @@ module.exports = {
           channel.send(msg);
         })
         .catch(console.error);
+
+      message.delete();
     } else {
-      message.channel.send(args.join(' '));
+      if (message.author.id === message.client.user.id) {
+        message.channel.send(args.join(' '));
+      }
     }
-    message.delete();
   },
 };
