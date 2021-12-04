@@ -15,7 +15,7 @@ module.exports = {
     } else {
       values.forEach((alias) => {
         content += `**${alias.name}:** ` +
-        `${alias.command.join(' ')}\n`;
+        `${alias.command.slice(0, 50)}...\n`;
       });
     }
 

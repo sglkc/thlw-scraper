@@ -25,8 +25,8 @@ module.exports = {
 
     if (result.length) {
       const resultCommand = result[0].item.command;
-      const commandArgs = resultCommand.slice(1);
-      const commandName = resultCommand.slice(0, 1).toString().toLowerCase();
+      const commandName = resultCommand.match(/\w+/g)[0];
+      const commandArgs = resultCommand.replace(commandName, '').split(' ');
       const command = message.client.commands.get(commandName)
         || message.client.commands.find(
           cmd => cmd.aliases && cmd.aliases.includes(commandName)
