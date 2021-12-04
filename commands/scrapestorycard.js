@@ -35,6 +35,10 @@ module.exports = {
             $('.tier-expl-container', card).find('br').replaceWith('\n');
             const abilityMax = $('.tier-expl-container', card).text().trim();
 
+            if (!(short in storycards)) {
+              storycards[short] = {};
+            }
+
             storycards[short]['tier'] = tier;
             storycards[short]['name'] = name;
             storycards[short]['url'] = 'https://gamepress.gg' + url;
@@ -68,6 +72,10 @@ module.exports = {
 
           $('.story-card-title', card).find('br').replaceWith('\n');
           const abilityMax = $('.story-card-title', card).text().trim();
+
+          if (!(short in storycards)) {
+            storycards[short] = {};
+          }
 
           storycards[short]['tier'] = 'Event';
           storycards[short]['name'] = name;
