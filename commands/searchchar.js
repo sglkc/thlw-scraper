@@ -9,7 +9,7 @@ module.exports = {
   aliases: ['char', 'ch'],
   args: true,
   usage: '<character name>',
-  execute(message, args) {
+  async execute(message, args) {
     const { searchThreshold } = require('../config.json');
     const name = args.join(' ');
 
@@ -49,10 +49,12 @@ module.exports = {
           )
           .setThumbnail(img)
           .addField('Description', info, false)
-          .setFooter('No additional info available');
+          .setFooter('Taken from GamePress | No additional info available');
 
         // If extra data available
-        if (ch.extras) {
+        if (!ch.extras) {
+          return message.channel.send({ embed: Embed });
+        } else {
           const title = ch.title;
           const role = ch.role;
           const bigimg = ch.bigimg;
@@ -70,23 +72,48 @@ module.exports = {
             .addField('Resistances', resist, true)
             .addField('Weaknesses', weak, true)
             .setImage(bigimg)
-            .setFooter('Taken from GamePress | Click title to open link');
+            .setFooter(
+              'Taken from GamePress | Click title to open link\n' +
+              'Use reaction below to see extra information!'
+            );
+
+          // Begin of reaction controller
+          const sentEmbed = await message.channel.send({ embed: Embed });
+          await sentEmbed.react('📄');
+          const reactions = sentEmbed.createReactionCollector(
+            (reaction, user) => reaction.emoji.name === '📄',
+            { time: 15000 }
+          );
+
+          reactions.on('collect', (reaction) => {
+            sentEmbed.reactions.removeAll();
+
+            const command = message.client.commands.get('extras');
+
+            try {
+              command.execute(message, [ name ]);
+              sentEmbed.delete();
+            } catch (error) {
+              console.error();
+              message.reply('An error has occured');
+            }
+          });
         }
       } else {
         let description = `Looking for **${name}**\n\n` +
           'Closest characters:';
 
         results.forEach((result, i) => {
-          description = description + `\n**${result.item.name}**`;
+          description = description + `\n${result.item.name}`;
         });
 
         Embed.setTitle('Not found!')
           .setDescription(description);
-      }
 
-      message.channel.send({ embed: Embed });
+        return message.channel.send({ embed: Embed });
+      }
     } else {
-      message.channel.send('No results');
+      return message.channel.send('No results');
     }
   }
 }

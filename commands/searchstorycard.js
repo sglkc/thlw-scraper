@@ -75,16 +75,16 @@ module.exports = {
           'Closest story cards:';
 
         results.forEach((result, i) => {
-          description = description + `\n**${result.item.name}**`;
+          description = description + `\n${result.item.name}`;
         });
 
         Embed.setTitle('Not found!')
           .setDescription(description);
       }
 
-      message.channel.send({ embed: Embed });
+      return message.channel.send({ embed: Embed });
     } else {
-      message.channel.send('No results');
+      return message.channel.send('No results');
     }
   }
 }

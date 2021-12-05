@@ -124,9 +124,9 @@ module.exports = {
           .setDescription(description);
       }
 
-      message.channel.send({ embed: Embed });
+      return message.channel.send({ embed: Embed });
     } else {
-      message.channel.send('No results');
+      return message.channel.send('No results');
     }
   }
 }

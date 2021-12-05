@@ -146,7 +146,7 @@ module.exports = {
           // Get spellcards effects
           $('.spell-container').each((i, sc) => {
             let effect = $('.spell-effects-description', sc).text().trim();
-            effect = effect.replace('\n\n', '\n');
+            effect = effect.replace('\n\n', '');
             spellcards[i + 1].effects = effect;
           });
 
