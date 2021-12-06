@@ -62,15 +62,15 @@ module.exports = {
           const weak = ch.weak.join(', ');
 
           Embed.setDescription(
-              `***${title}***\n` +
-              `**Tier:** ${tier.overall} | ` +
-              `**Farm:** ${tier.farm} | ` +
-              `**CQ:** ${tier.tower}\n` +
-              `**Role:** ${role}\n` +
-              `**Type:** ${type}`
-            )
+            `***${title}***\n` +
+            `**Tier:** ${tier.overall} | ` +
+            `**Farm:** ${tier.farm} | ` +
+            `**CQ:** ${tier.tower}\n` +
+            `**Role:** ${role}\n` +
+            `**Type:** ${type}`
+          )
             .addField('Resistances', resist, true)
-            .addField('Weaknesses', weak, true)
+            .addField('Weaknesses', weak || 'None', true)
             .setImage(bigimg)
             .setFooter(
               'Taken from GamePress | Click title to open link\n' +
@@ -96,6 +96,12 @@ module.exports = {
             } catch (error) {
               console.error();
               message.reply('An error has occured');
+            }
+          });
+
+          reactions.on('end', () => {
+            if (!sentEmbed.deleted) {
+              sentEmbed.reactions.removeAll();
             }
           });
         }

@@ -58,7 +58,7 @@ module.exports = {
             `**Role:** ${role} | ` +
             `**Type:** ${type}\n` +
             `**Resistances:** ${resist}\n` +
-            `**Weaknesses:** ${weak}`
+            `**Weaknesses:** ${weak || 'None'}`
           )
           .setThumbnail(img)
 
