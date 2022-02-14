@@ -7,8 +7,7 @@ module.exports = {
   description: 'Scrapes story cards from GamePress tier list & sc list.\n' +
   'Scraping defaults to story cards without additional info\n' +
   'Use `detailed` to scrape detailed story card data\n' +
-  'Use `force` to force update every story cards\n' +
-  'Insert character name for a specific character',
+  'Use `force` to force update every story cards',
   aliases: ['scrapecard', 'scrapesc'],
   owner: true,
   usage: '[detailed] [force]',
@@ -48,7 +47,7 @@ module.exports = {
           });
         });
 
-        status.edit('Success scraping characters from tier list');
+        status.edit('Success scraping story cards from tier list');
       })
       .catch((err) => {
         status.edit('Failed scraping story cards from tier list');
