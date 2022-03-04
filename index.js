@@ -1,13 +1,21 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const { token, prefix, owner } = require('./config.json');
-
 const client = new Discord.Client();
-client.commands = new Discord.Collection();
-
 const commandFiles = fs.readdirSync('./commands').filter(
   file => file.endsWith('.js')
 );
+const dataFiles = [
+  'aliases.json', 'characters.json', 'storycards.json', 'tower.json'
+];
+
+dataFiles.forEach((file) => {
+  if (fs.readdirSync('./data').includes(file)) return;
+
+  fs.writeFileSync('./data/' + file, '{}');
+});
+
+client.commands = new Discord.Collection();
 
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
